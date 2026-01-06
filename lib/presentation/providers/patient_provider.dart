@@ -17,16 +17,17 @@ class PatientProvider extends ChangeNotifier {
   String? get error => _error;
 
   Future<void> fetchPatientList()async{
+    print('patient provider called');
     _isLoading=true;
     _error=null;
     notifyListeners();
 try {
   _patientData= await patientUsecase.execute();
-  print("_patientData $_patientData");
-  notifyListeners();
+
+ 
 } catch (e) {
    _error = e.toString();
-   notifyListeners();
+
 }
 _isLoading = false;
   notifyListeners();

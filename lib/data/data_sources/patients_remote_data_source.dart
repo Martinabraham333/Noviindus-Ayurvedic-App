@@ -12,8 +12,7 @@ class PatientsRemoteDataSource {
     Future<List<PatientModel>> fetchPatientsList() async {
 try {
       final response = await client.get('PatientList');
-    log('Patient List');
-    log(response.statusCode.toString());
+ 
     
     if (response.statusCode == 200) {
       
@@ -35,7 +34,7 @@ try {
       throw Exception("Failed to fetch patient list: ${response.statusCode}");
     }
 } catch (e) {
-  log(e.toString());
+
   throw Exception('Failed to fetch patient List');
 }
   }

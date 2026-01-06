@@ -14,12 +14,10 @@ class AuthRemoteDataSource {
       "username": username,
       "password": password,
     });
-    log('Login');
-    log(response.statusCode.toString());
-    
+      
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
-      log(jsonData.toString());  
+    
       if (jsonData["status"] == true) {
         AppStrings.tocken = jsonData["token"];
         return UserModel.fromJson(jsonData["user_details"]);

@@ -14,7 +14,7 @@ class PatientRepositoryImpl implements PatientRepository {
           .fetchPatientsList();
       return patientModel;
     } catch (e) {
-      throw Exception('Login failed: ${e.toString()}');
+      throw Exception(e);
     }
   }
 }
