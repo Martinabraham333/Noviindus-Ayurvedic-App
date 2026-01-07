@@ -1,8 +1,10 @@
+import 'package:ayurvedic_centre_patients/core/helper/date_time_selection_helper.dart';
 import 'package:ayurvedic_centre_patients/core/widgets/custom_button.dart';
 import 'package:ayurvedic_centre_patients/core/widgets/custom_dropdown.dart';
 import 'package:ayurvedic_centre_patients/core/widgets/custom_text.dart';
 import 'package:ayurvedic_centre_patients/core/widgets/custom_textfield.dart';
 import 'package:ayurvedic_centre_patients/presentation/providers/register_provider.dart';
+import 'package:ayurvedic_centre_patients/presentation/screens/patient_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,12 +31,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _treatmentController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _branchController = TextEditingController();
+  final TextEditingController _hourController = TextEditingController();
+  final TextEditingController _minuteController = TextEditingController();
+  final TextEditingController _treatmentTimeController = TextEditingController();
 
   int? _treatmentId;
   int? _branchId;
-  String? _paymentOption;
-  String? _selectedHour;
-  String? _selectedMinutes;
+  String? _paymentType;
+ 
 
   @override
   void dispose() {
@@ -52,6 +56,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+ void _clearAllFields() {
+  _nameController.clear();
+  _whatsappController.clear();
+  _addressController.clear();
+  _totalAmountController.clear();
+  _discountAmountController.clear();
+  _advanceAmountController.clear();
+  _balanceAmountController.clear();
+  _treatmentDateController.clear();
+  _treatmentController.clear();
+  _locationController.clear();
+  _branchController.clear();
+  _hourController.clear();
+  _minuteController.clear();
+  _treatmentTimeController.clear();
+
+  _treatmentId = null;
+  _branchId = null;
+  _paymentType = null;
+}
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -59,6 +85,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RegisterProvider>().fetchbranchList();
+      context.read<RegisterProvider>().fetchTreatmentList();
+    
     });
   }
 
@@ -142,7 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         return CustomButton(
                           title: '+ Add Treatments',
                           ontap: () async {
-                            await provider.fetchTreatmentList();
+                            
 
                             await addTreatmentDialogueBox(provider);
                           },
@@ -165,6 +193,65 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       title: 'Discount Amount',
                     ),
                     SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: CustomText(text: 'Payment Options'),
+                    ),
+                   
+                    Consumer<RegisterProvider>(
+                      builder: (context,provider,_) {
+
+                        return Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Row(
+                                children: [
+                                  Radio(value: PaymentMethod.cash,
+                                  groupValue:provider.paymentMethod ,
+                                  onChanged: (value) {
+                                    provider.selectPaymentMethod(paymentMethod: PaymentMethod.cash);
+                                     _paymentType='Cash';
+                                  },),
+                                  CustomText(text: 'Cash'),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Row(
+                                children: [
+                                   Radio(value: PaymentMethod.card,
+                                  groupValue:provider.paymentMethod ,
+                                  onChanged: (value) {
+                                    provider.selectPaymentMethod(paymentMethod: PaymentMethod.card);
+                                      _paymentType='Card';
+                                  },),
+                                  CustomText(text: 'Card'),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Row(
+                                children: [
+                                Radio(value: PaymentMethod.upi,
+                                  groupValue:provider.paymentMethod ,
+                                  onChanged: (value) {
+                                    provider.selectPaymentMethod(paymentMethod: PaymentMethod.upi);
+                                   _paymentType='UPI';
+                                  },),
+                                  CustomText(text: 'UPI'),
+                                ],
+                              ),
+                            ),
+                           
+                           
+                          ],
+                        );
+                      }
+                    ),
+                    SizedBox(height: 20),
                     CustomTextField(
                       controller: _advanceAmountController,
                       hintText: 'Enter advance amount',
@@ -179,9 +266,83 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     SizedBox(height: 20),
                     CustomTextField(
                       controller: _treatmentDateController,
-                      hintText: 'Enter treatment date',
+                      hintText: 'Select treatment date',
                       title: 'Treatment Date',
+                      icon: Icons.calendar_month,
+                      ontap: ()async {
+                      final date= await    selectDate(context);
+                      _treatmentDateController.text=date;
+                      },
                     ),
+
+                     SizedBox(height: 20),
+                      CustomTextField(
+                      controller: _treatmentTimeController,
+                      hintText: 'Select treatment Time',
+                      title: 'Treatment Time',
+                      icon: Icons.calendar_month,
+                      ontap: ()async {
+                      final time= await    selectTime(context);
+                      _treatmentTimeController.text=time;
+                      },
+                    ),
+                  //  Row(
+                  //    children: [
+                  //      Expanded(child: CustomDropDown(hintText: 'Hour', ontap: (){}, controller: _hourController, dropDownList: [], title: '')),
+                  //     SizedBox(width: 20,),
+                  //      Expanded(child: CustomDropDown(hintText: 'Minutes', ontap: (){}, controller: _minuteController, dropDownList: [], title: '')),
+                  //    ],
+                  //  ),
+                    SizedBox(height: 20),
+                    Consumer<RegisterProvider>(
+                      builder: (context,provider,_) {
+                        return provider.isLoading==true ?CircularProgressIndicator(color: Color(0xFF006837) ,):
+                        
+                        
+                        CustomButton(title: 'Save', ontap: (){
+                         provider.postRegisterDetails(
+                            {
+                          'name':_nameController.text,
+                          'excecutive':'Admin',
+                          'payment':_paymentType??'',
+                        'phone':_whatsappController.text,
+                        'address':_addressController.text,
+                        'total_amount':_totalAmountController.text,
+                        'discount_amount':_discountAmountController.text,
+                        'advance_amount':_advanceAmountController.text,
+                        'balance_amount':_balanceAmountController.text,
+                        'date_nd_time':'${_treatmentDateController.text}-${_treatmentTimeController.text}',
+                        'id':'',
+                        'male':provider.listOfIdsAsString,
+                        'female':provider.listOfIdsAsString,
+                        'branch':_branchId.toString(),
+                        'treatments':provider.listOfIdsAsString,
+                          }
+                          );
+
+                          if (provider.isSuccess==true) {
+                            provider.clearAllData();
+                            _clearAllFields();
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+return PatientListScreen();
+                            }));
+                            ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Registraction successful!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+                          } else {
+                                 ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Registraction failed!"),
+          backgroundColor: Colors.red,
+        ),
+      );
+                          }
+                        });
+                      }
+                    )
                   ],
                 ),
               ),

@@ -1,13 +1,16 @@
 import 'package:ayurvedic_centre_patients/domain/entities/patient_entity.dart';
 import 'package:ayurvedic_centre_patients/domain/entities/treatment_entity.dart';
 import 'package:ayurvedic_centre_patients/domain/usecases/branch_usecase.dart';
+import 'package:ayurvedic_centre_patients/domain/usecases/register_usecase.dart';
 import 'package:ayurvedic_centre_patients/domain/usecases/treatement_usecase.dart';
 import 'package:flutter/material.dart';
 
+enum PaymentMethod { cash, upi, card,none }
 class RegisterProvider extends ChangeNotifier {
   final BranchUsecase branchUsecase;
   final TreatementUsecase treatmentUsecase;
-  RegisterProvider(this.branchUsecase, this.treatmentUsecase);
+  final RegisterUsecase registerUsecase;
+  RegisterProvider(this.branchUsecase, this.treatmentUsecase, this.registerUsecase);
 
   List<BranchEntity>? _branchData;
   List<BranchEntity>? get branchData => _branchData;
@@ -104,6 +107,9 @@ _femaleNumber=femaleCount;
 
   List<Map<String, dynamic>> _treatmentList = [];
   List<Map<String, dynamic>> get treatmentList => _treatmentList;
+ String _listOfIdsAsString = '';
+String get listOfIdsAsString => _listOfIdsAsString;
+List listOfId=[];
   addTreatments({
     required int treatmentId,
     required String treatmentName,
@@ -121,7 +127,8 @@ _femaleNumber=femaleCount;
     }
 
     print('malelist : ${maleList.join(',')}');
-
+  listOfId.add(treatmentId);
+  _listOfIdsAsString=listOfId.join(',');
     _treatmentList.add({
       'id': treatmentId,
       'name': treatmentName,
@@ -166,4 +173,52 @@ _treatmentList[index]={
     _treatmentList.removeAt(index);
     notifyListeners();
   }
+
+PaymentMethod _paymentMethod=PaymentMethod.none;
+PaymentMethod get paymentMethod=> _paymentMethod;
+
+  selectPaymentMethod({required PaymentMethod paymentMethod}){
+  _paymentMethod=paymentMethod;
+ 
+  notifyListeners();
+  }
+
+bool _isSuccess=false;
+bool get isSuccess=> _isSuccess;
+  postRegisterDetails(Map<String,String> data)async{
+    _isLoading=true;
+    notifyListeners();
+  try {
+    await registerUsecase.execute(data);
+    _isSuccess=true;
+    
+  } catch (e) {
+   _isSuccess=false;
+  }
+    finally {
+    _isLoading = false;
+    notifyListeners();
+  }
+  }
+
+  void clearAllData() {
+  // gender
+  _maleNumber = 0;
+  _femaleNumber = 0;
+
+  // treatments
+  _treatmentList.clear();
+  listOfId.clear();
+  _listOfIdsAsString = '';
+
+  // payment
+  _paymentMethod = PaymentMethod.none;
+
+  // api flags
+  _isSuccess = false;
+  _error = null;
+
+  notifyListeners();
+}
+
 }

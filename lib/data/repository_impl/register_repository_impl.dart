@@ -30,4 +30,14 @@ class RegisterRepositoryImpl implements RegisterRepository {
       throw Exception(e);
     }
   }
+  @override
+  Future<bool> postRegisterDeatils(Map<String,String> data)async {
+    try {
+      bool result = await remoteDataSource.postRegisterDetails(data);
+      return result;
+    } catch (e) {
+       print(e);
+      throw Exception(e);
+    }
+  }
 }

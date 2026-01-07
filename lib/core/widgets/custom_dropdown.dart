@@ -25,7 +25,7 @@ class CustomDropDown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
+      title==''?SizedBox():  Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: CustomText(text: title),
         ),

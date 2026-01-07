@@ -5,4 +5,5 @@ import 'package:ayurvedic_centre_patients/domain/entities/user_entity.dart';
 abstract  class RegisterRepository {
     Future<List<BranchEntity>>  fetchBranchDeatils();
     Future<List<TreatmentEntity>>  fetchTreatmentDeatils();
+    Future<bool>  postRegisterDeatils(Map<String,String> data);
 }

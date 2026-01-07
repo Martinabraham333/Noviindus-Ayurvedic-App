@@ -10,7 +10,7 @@ class AuthRemoteDataSource {
   AuthRemoteDataSource(this.client);
 
   Future<UserModel> login(String username, String password) async {
-    final response = await client.post('Login', {
+    final response = await client.login('Login', {
       "username": username,
       "password": password,
     });

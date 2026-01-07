@@ -65,5 +65,30 @@ class RegisterRemoteDataSource {
       throw Exception('Failed to fetch treatments List');
     }
   }
+    Future <bool> postRegisterDetails(Map<String,String> data) async {
+    try {
+      final response = await client.post('PatientUpdate',data);
+      log('PatientUpdate');
+      log(response.statusCode.toString());
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+
+        if (jsonData["status"] == true) {
+         
+
+          return true;
+        } else {
+          throw Exception(jsonData["message"]);
+        }
+      } else {
+        throw Exception("Failed to fetch treatments list: ${response.statusCode}");
+      }
+    } catch (e) {
+      log(e.toString());
+      throw Exception('Failed to fetch treatments List');
+    }
+  }
+
 
 }

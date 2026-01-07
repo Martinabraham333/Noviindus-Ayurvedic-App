@@ -43,7 +43,7 @@ class CustomTextField extends StatelessWidget {
             border: InputBorder.none,
             suffixIcon: GestureDetector(
               onTap: ontap,
-              child: Icon(icon, color: Colors.grey),
+              child: Icon(icon, color:  Color(0xFF006837)),
             ),
             filled: true,
             fillColor: Color(0x1A000000),
