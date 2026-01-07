@@ -12,6 +12,7 @@ import 'package:ayurvedic_centre_patients/domain/repositories/register_repositor
 import 'package:ayurvedic_centre_patients/domain/usecases/auth_usecase.dart';
 import 'package:ayurvedic_centre_patients/domain/usecases/branch_usecase.dart';
 import 'package:ayurvedic_centre_patients/domain/usecases/patient_usecase.dart';
+import 'package:ayurvedic_centre_patients/domain/usecases/treatement_usecase.dart';
 import 'package:ayurvedic_centre_patients/presentation/providers/auth_provider.dart';
 import 'package:ayurvedic_centre_patients/presentation/providers/patient_provider.dart';
 import 'package:ayurvedic_centre_patients/presentation/providers/register_provider.dart';
@@ -36,8 +37,9 @@ sl.registerLazySingleton(()=>PatientsRemoteDataSource(sl()));
 
 //// REGISTER DEPENDENCY ////
 
-sl.registerFactory(()=>RegisterProvider(sl()));
+sl.registerFactory(()=>RegisterProvider(sl(),sl()));
 sl.registerLazySingleton(()=>BranchUsecase(sl()));
+sl.registerLazySingleton(()=>TreatementUsecase(sl()));
 sl.registerLazySingleton<RegisterRepository>(()=> RegisterRepositoryImpl(sl()));
 sl.registerLazySingleton(()=>RegisterRemoteDataSource(sl()));
 }

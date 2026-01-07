@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class CustomDropDown extends StatelessWidget {
   final TextEditingController controller;
-  final List dropDownList;
+  final List<Map<String,dynamic>> dropDownList;
   final double width;
   final String title;
   final Function ontap;
@@ -57,7 +57,7 @@ class CustomDropDown extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: Text(
-                          item,
+                          item['val2'],
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,

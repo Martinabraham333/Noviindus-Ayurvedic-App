@@ -1,6 +1,8 @@
 import 'package:ayurvedic_centre_patients/domain/entities/patient_entity.dart';
+import 'package:ayurvedic_centre_patients/domain/entities/treatment_entity.dart';
 import 'package:ayurvedic_centre_patients/domain/entities/user_entity.dart';
 
 abstract  class RegisterRepository {
     Future<List<BranchEntity>>  fetchBranchDeatils();
+    Future<List<TreatmentEntity>>  fetchTreatmentDeatils();
 }
