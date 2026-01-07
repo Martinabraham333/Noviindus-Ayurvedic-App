@@ -77,8 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         CustomTextField(
                           controller: _usernameController,
-                          hintText: 'Enter Your Email',
-                          title: 'Email',
+                          hintText: 'Enter Your User Name',
+                          title: 'User Name',
                         ),
                         SizedBox(height: 20),
                         CustomTextField(
