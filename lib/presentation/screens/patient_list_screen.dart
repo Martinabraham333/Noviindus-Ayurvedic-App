@@ -65,15 +65,15 @@ class _PatientListScreenState extends State<PatientListScreen> {
                   SizedBox(height: 20,),
                   Row(
                     children: [
-                      Flexible(
-                        flex: 3,
-                        child: CustomSearchTextField(controller:_searchController , hintText: 'Search',icon: Icons.search,)),
+                      SizedBox(
+                        width: 250,
+                        child: CustomSearchTextField(controller:_searchController , hintText: 'Search', icon: Icons.search,)),
                         SizedBox(width: 20,),
-                      Flexible(
-                        flex: 1,
-                        child: CustomButton(title:'Search' , ontap: (){
+                      Expanded(
+                        child: CustomButton(title:'Search' ,fontsize:16, ontap: (){
                           patientProvider.filterPatientDataFunction(_searchController.text);
-                        }))
+                        }),
+                      )
                     ],
                   ),
                 
